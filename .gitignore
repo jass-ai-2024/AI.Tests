@@ -4,3 +4,5 @@
 addReq.py
 .env
 venv
+test_samples/**/Dockerfile
+test_samples/**/.github
