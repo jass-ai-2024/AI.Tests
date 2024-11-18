@@ -1,5 +1,6 @@
 .idea
 .DS_Store
+**/__pycache__
+addReq.py
 .env
 venv
-**/__pycache__

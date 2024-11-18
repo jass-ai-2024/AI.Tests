@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 import platform
 
 app = Flask(__name__)
@@ -15,4 +15,4 @@ def get_version():
         "version": platform.version(),
         "release": platform.release()
     }
-    return jsonify(system_version)
+    return system_version
