@@ -1,5 +1,5 @@
 ### Overview
-Our team, consisting of four members — Kirill Krinkin, Iaroslav Chelombitko, Ilia Nechaev, and Kamaliia Alisheva — forms the UI/UX/AI Tests team. Our primary goal is to ensure that the generated code meets the necessary standards for usability and approval.
+Our team, consisting of four members — Kirill Krinkin, Iaroslav Chelombitko, Ilia Nechaev, and Kamaliia Alisheva — forms the AI Tests team. Our primary goal is to ensure that the generated code meets the necessary standards for usability and approval.
 
 ###  Problem Statement (technology perspective)
 The problem we are to solve is to develop a system that will take as an input the directory with the code and tests it.
@@ -20,9 +20,11 @@ The problem we are to solve is to develop a system that will take as an input th
 
 ### Timeline
 - 18.11: Deliverables:
-	- tbd
+	- Task understanding
+	- Base unused code checks
+  	- Synthetic code (tests) generation
 - 19.11: Deliverables:
-	- Unused code checks
+	- Unused code checks 
 	- Smoke test
 	- Deploy
 - 20.11: Deliverables:
@@ -41,12 +43,12 @@ At least two!
 
 | Risk   | Impact          | Probability     | Mitigation Strategy  |
 | ------ | --------------- | --------------- | -------------------- |
-| Risk 1 | High/Medium/Low | High/Medium/Low | Strategy description |
-| Risk 2 | High/Medium/Low | High/Medium/Low | Strategy description |
+| Insufficient user-case coverage | **High**/Medium/Low | High/**Medium**/Low | We will not only rely on the synthetic tests, but actuallywork with other teams to get the "real-code" to test; more strict tests overall |
+| Github-actions limits | High/**Medium**/Low | High/**Medium**/Low | Set up all the actions that way to mitigate it. Actions run separation |
 ### Success Criteria
-- Criterion 1
-- Criterion 2
-- Criterion 3
+- Automatic GitHub Action run when the code is commited.
+- Correctly returned exit codes for each keys
+- End-to-end correct feedback sending
 
 ### Appendix
 Any additional information, references, or documents relevant to the project.
