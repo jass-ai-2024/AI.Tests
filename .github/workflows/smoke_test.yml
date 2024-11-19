@@ -1,0 +1,43 @@
+name: Cross-platform SmokeTest
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  smoke_test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest] # Запускаем на Ubuntu и macOS
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Шаг 1: Проверить код из репозитория.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Шаг 2: Установить Python.
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Шаг 3: Перебор всех папок и выполнение SmokeTest.
+      - name: Run SmokeTest on each sample
+        run: |
+          for dir in test_samples/*/; do
+            echo "Processing $dir"
+            # Устанавливаем зависимости, если они есть.
+            if [ -f "$dir/requirements.txt" ]; then
+              pip install -r "$dir/requirements.txt"
+            fi
+            # Запускаем SmokeTest для main.py.
+            if [ -f "$dir/main.py" ]; then
+              python SmokeTest/smoke_test.py "$dir/main.py"
+            else
+              echo "Error: main.py not found in $dir"
+              exit 1
+            fi
+          done
