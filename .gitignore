@@ -1,0 +1,8 @@
+.idea
+.DS_Store
+**/__pycache__
+addReq.py
+.env
+venv
+test_samples/**/Dockerfile
+test_samples/**/.github

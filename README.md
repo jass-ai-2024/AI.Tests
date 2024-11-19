@@ -7,21 +7,26 @@ The problem we are to solve is to develop a system that will take as an input th
 ### Objectives
 - Test the code in case of any unused entities in it
 - Test the typing of the code
-- Ilia tests...
+- Smoke test
+- Functional tests based on project description
+- Deployment
 - Approval
 
 ### Features
 - Unused Code Checks: We employ various established methods to verify whether the code contains unused elements and ensure adequate typing. For the code to progress, it must pass all tests without any failures or "errors." These tests are conducted using a combination of tools.
-- Feature 2: Brief description
-- Feature 3: Brief description
+- Smoke test: we check that the code can be run without any errors and it runs on specific port.
+- Deploy: after all test passed we deploy the code to the server.
+- All checks and deployment are done via CI/CD pipeline on GitHub Actions.
 
 ### Timeline
 - 18.11: Deliverables:
 	- tbd
 - 19.11: Deliverables:
-	- tbd
+	- Unused code checks
+	- Smoke test
+	- Deploy
 - 20.11: Deliverables:
-	- tbd
+	- Functionl tests
 - 21.11: Deliverables:
 	- tbd
 ### Team
@@ -45,4 +50,3 @@ At least two!
 
 ### Appendix
 Any additional information, references, or documents relevant to the project.
-
