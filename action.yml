@@ -20,7 +20,9 @@ runs:
     - name: Run linter checks
       continue-on-error: true
       id: linter
-      run: python ${{ github.action_path }}/Linter/input_code_check.py ${{ github.workspace }}
+      run: |
+        pip install -r requirements.txt
+        python ${{ github.action_path }}/Linter/input_code_check.py ${{ github.workspace }}
       shell: bash
 
     - name: Upload linter results
