@@ -24,6 +24,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install global dependencies
+        run: pip install requests
+
+
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
