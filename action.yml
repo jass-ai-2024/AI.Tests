@@ -1,5 +1,5 @@
-name: "Docker Smoke Test"
-description: "Runs a smoke test by building and running a Docker container"
+name: "Code Quality and Smoke Tests"
+description: "Runs smoke tests and code quality checks sequentially"
 runs:
   using: "composite"
   steps:
@@ -7,10 +7,26 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
-    - name: Install dependecies
-      run: pip install -r ${{ github.action_path }}/requirements.txt
+
+    - name: Install dependencies
+      run: |
+        pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
 
     - name: Run smoke test
       run: python ${{ github.action_path }}/SmokeTest/smoke_test.py
       shell: bash
+
+    - name: Run linter checks
+      continue-on-error: true
+      id: linter
+      run: python ${{ github.action_path }}/Linter/input_code_check.py ${{ github.workspace }}
+      shell: bash
+
+    - name: Upload linter results
+      if: steps.linter.outcome == 'failure'
+      uses: actions/upload-artifact@v3
+      with:
+        name: linter-results
+        path: linter_results.txt
+        retention-days: 5

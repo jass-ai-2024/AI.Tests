@@ -113,4 +113,7 @@ if __name__ == "__main__":
     tester = RunUnusedCheckTests(path)
     test_run = tester.analyze_code()
     test_results = tester.return_status()
-
+    if not test_results[0]:
+        with open("linter_results.txt", "w") as f:
+            f.write(test_results[1])
+        sys.exit(1)
