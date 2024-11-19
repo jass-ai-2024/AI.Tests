@@ -1,0 +1,13 @@
+name: "Docker Smoke Test"
+description: "Runs a smoke test by building and running a Docker container"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+
+    - name: Run smoke test
+      run: python ${{ github.action_path }}/SmokeTest/smoke_test.py
+      shell: bash
