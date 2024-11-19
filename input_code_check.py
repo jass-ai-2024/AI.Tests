@@ -1,5 +1,6 @@
 import os
 import subprocess
+import tempfile
 from typing import List, Tuple
 
 
@@ -9,6 +10,7 @@ class RunUnusedCheckTests:
         self.__pylint_check = True
         self.__flake8_check = True
         self.__deadcode_check = True
+        self.__mypy_check = True
         self.__errors = list()
 
     def __run_pylint(self):
@@ -56,17 +58,34 @@ class RunUnusedCheckTests:
             self.__deadcode_check = False
             self.__errors.append(f"Error running deadcode: {e}")
 
+    def __run_mypy(self):
+        try:
+            result = subprocess.run(
+                ["mypy", "--strict", self.file_or_directory_path],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            print(result)
+            if result.returncode != 0:
+                self.__mypy_check = False
+                self.__errors.append(result.stdout.splitlines())
+        except Exception as e:
+            self.__mypy_check = False
+            self.__errors.append(f"Error running mypy: {e}")
+
     def analyze_code(self):
         tools = {
             "Pylint": self.__run_pylint,
             "Flake8": self.__run_flake8,
             "DeadCode": self.__run_deadcode,
+            "Mypy": self.__run_mypy,
         }
         for tool_name, tool_func in tools.items():
             print(f"Running {tool_name}...")
             tool_func()
 
-        if self.__pylint_check + self.__flake8_check + self.__deadcode_check:
+        if self.__pylint_check & self.__flake8_check & self.__deadcode_check & self.__mypy_check:
             print("All tests Passed!")
         else:
             print("Some tests failed. Check them below:")
@@ -74,7 +93,7 @@ class RunUnusedCheckTests:
                 print(failed_test)
 
     def return_status(self):
-        is_tests_ok = self.__pylint_check + self.__flake8_check + self.__deadcode_check
+        is_tests_ok = self.__pylint_check & self.__flake8_check & self.__deadcode_check & self.__mypy_check
         message = str(self.__errors) if len(self.__errors) > 0 else "OK!"
         return is_tests_ok, message
 
