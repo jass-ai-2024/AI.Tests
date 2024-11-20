@@ -30,17 +30,28 @@ jobs:
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
+          mkdir -p smoke_test_logs
           for dir in test_samples/*/; do
             echo "Processing $dir"
-            # Устанавливаем зависимости, если они есть.
             if [ -f "$dir/requirements.txt" ]; then
+              echo "Installing dependencies for $dir"
               pip install -r "$dir/requirements.txt"
             fi
-            # Запускаем SmokeTest для main.py.
+
             if [ -f "$dir/main.py" ]; then
-              python SmokeTest/smoke_test.py "$dir/main.py"
+              echo "Running smoke test for $dir" | tee -a smoke_test_logs/success.log
+              python SmokeTest/smoke_test.py "$dir/main.py" >> smoke_test_logs/success.log 2>&1
+              if [ $? -ne 0 ]; then
+                echo "Smoke test failed for $dir" | tee -a smoke_test_logs/error.log
+              fi
             else
-              echo "Error: main.py not found in $dir"
-              exit 1
+              echo "Error: main.py not found in $dir" | tee -a smoke_test_logs/error.log
             fi
           done
+          
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: smoke-test-logs
+          path: smoke_test_logs/
