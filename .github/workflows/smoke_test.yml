@@ -32,20 +32,34 @@ jobs:
         run: |
           mkdir -p smoke_test_logs
           for dir in test_samples/*/; do
-            echo "Processing $dir"
+            echo "Processing $dir" | tee -a smoke_test_logs/summary.log
+            log_file="smoke_test_logs/$(basename $dir)_log.txt"
+
+            # Лог установки зависимостей
             if [ -f "$dir/requirements.txt" ]; then
-              echo "Installing dependencies for $dir"
-              pip install -r "$dir/requirements.txt"
+              echo "Installing dependencies for $dir" | tee -a "$log_file"
+              pip install -r "$dir/requirements.txt" >> "$log_file" 2>&1
+              if [ $? -ne 0 ]; then
+                echo "Dependency installation failed for $dir" | tee -a "$log_file"
+                continue
+              fi
             fi
 
-            if [ -f "$dir/main.py" ]; then
-              echo "Running smoke test for $dir" | tee -a smoke_test_logs/success.log
-              python SmokeTest/smoke_test.py "$dir/main.py" >> smoke_test_logs/success.log 2>&1
-              if [ $? -ne 0 ]; then
-                echo "Smoke test failed for $dir" | tee -a smoke_test_logs/error.log
-              fi
+            # Проверка наличия main.py
+            if [ ! -f "$dir/main.py" ]; then
+              echo "Error: main.py not found in $dir" | tee -a "$log_file"
+              echo "Missing main.py in $dir" >> smoke_test_logs/errors.log
+              continue
+            fi
+
+            # Запуск SmokeTest
+            echo "Running smoke test for $dir" | tee -a "$log_file"
+            python SmokeTest/smoke_test.py "$dir/main.py" >> "$log_file" 2>&1
+            if [ $? -ne 0 ]; then
+              echo "Smoke test failed for $dir" | tee -a "$log_file"
+              echo "$dir failed smoke test" >> smoke_test_logs/errors.log
             else
-              echo "Error: main.py not found in $dir" | tee -a smoke_test_logs/error.log
+              echo "$dir passed smoke test" >> smoke_test_logs/success.log
             fi
           done
           
