@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install net-tools
+        run: sudo apt-get install -y net-tools
+
+
       # Шаг 3: Обновляем pip.
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
@@ -43,10 +47,19 @@ jobs:
             echo "Running smoke test for $dir..."
             export GITHUB_WORKSPACE=$dir
 
-            if lsof -i:8080; then
-              echo "Port 8080 is in use. Freeing it..."
-              fuser -k 8080/tcp || true
+            PORT=8080
+
+            # Остановка контейнеров, которые могут занимать порт
+            docker ps -aq --filter "status=exited" | xargs -r docker rm
+
+            # Проверка и освобождение порта
+            if netstat -tuln | grep ":$PORT "; then
+              echo "Port $PORT is in use. Freeing it..."
+              fuser -k $PORT/tcp || true
+            else
+              echo "Port $PORT is free."
             fi
+
             
             if ! python SmokeTest/smoke_test.py; then
               echo "Smoke test failed for $dir"
