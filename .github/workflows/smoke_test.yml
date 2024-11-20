@@ -39,6 +39,8 @@ jobs:
             echo "Running smoke test for $dir..."
             # Меняем рабочую директорию на текущую папку
             cd "$dir"
+            echo $GITHUB_WORKSPACE
+
             # Запускаем smoke_test.py в контексте этой папки
             python ../SmokeTest/smoke_test.py
             # Выходим из папки, чтобы продолжить проверку следующей
