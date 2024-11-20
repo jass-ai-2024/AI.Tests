@@ -30,23 +30,7 @@ jobs:
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
-          mkdir -p smoke_test_logs
           for dir in test_samples/*/; do
             echo "Running smoke test for $dir..."
-            log_file="smoke_test_logs/$(basename $dir)_log.txt"
-            
-            python SmokeTest/smoke_test.py "$dir" > "$log_file" 2>&1
-            if [ $? -ne 0 ]; then
-              echo "Error: Smoke test failed for $dir" | tee -a "$log_file"
-              echo "$dir failed smoke test" >> smoke_test_logs/errors.log
-            else
-              echo "$dir passed smoke test" >> smoke_test_logs/success.log
-            fi
+            python SmokeTest/smoke_test.py "$dir"
           done
-
-      - name: Upload logs
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: smoke-test-logs
-          path: smoke_test_logs/
