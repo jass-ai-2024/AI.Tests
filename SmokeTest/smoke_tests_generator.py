@@ -30,7 +30,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Expose the port your app runs on
-EXPOSE 8080
+EXPOSE 5000
 
 # Command to run your application
 CMD ["python", "main.py"]
@@ -64,7 +64,7 @@ jobs:
 
     - name: Run Docker container
       run: |
-        docker run -d -p 8080:8080 --name myapp_container myapp
+        docker run -d -p 5000:5000 --name myapp_container myapp
         sleep 5  # Wait for the service to start
 
     - name: Install curl
@@ -72,7 +72,7 @@ jobs:
 
     - name: Test application
       run: |
-        RESPONSE=$(curl -s http://localhost:8080)
+        RESPONSE=$(curl -s http://localhost:5000)
         echo "Response: $RESPONSE"
         if [ -z "$RESPONSE" ]; then
           echo "No response from the application. Failing the test."
@@ -97,7 +97,7 @@ def local_tests(project_folder):
     os.chdir(project_folder)
     try:
         print("Building Docker image locally...")
-        result = subprocess.run(['docker', 'build', '-t', 'myapp_local', '.'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(['docker', 'build', '-t', 'myapp_local', '.', '--progress', 'plain'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             print("Failed to build Docker image.")
             print(result.stderr.decode('utf-8'))
@@ -105,7 +105,7 @@ def local_tests(project_folder):
 
         # Run Docker container
         print("Running Docker container locally...")
-        result = subprocess.run(['docker', 'run', '-d', '-p', '8080:8080', '--name', 'myapp_container_local', 'myapp_local'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(['docker', 'run', '-d', '-p', '5000:5000', '--name', 'myapp_container_local', 'myapp_local'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             print("Failed to run Docker container.")
             print(result.stderr.decode('utf-8'))
@@ -123,7 +123,7 @@ def local_tests(project_folder):
             import requests
 
         try:
-            response = requests.get('http://localhost:8080')
+            response = requests.get('http://localhost:5000')
             print(f"Response: {response.text}")
             if response.status_code != 200:
                 print("Application returned non-200 status code.")
