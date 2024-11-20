@@ -32,37 +32,18 @@ jobs:
         run: |
           mkdir -p smoke_test_logs
           for dir in test_samples/*/; do
-            echo "Processing $dir" | tee -a smoke_test_logs/summary.log
+            echo "Running smoke test for $dir..."
             log_file="smoke_test_logs/$(basename $dir)_log.txt"
-
-            # Лог установки зависимостей
-            if [ -f "$dir/requirements.txt" ]; then
-              echo "Installing dependencies for $dir" | tee -a "$log_file"
-              pip install -r "$dir/requirements.txt" >> "$log_file" 2>&1
-              if [ $? -ne 0 ]; then
-                echo "Dependency installation failed for $dir" | tee -a "$log_file"
-                continue
-              fi
-            fi
-
-            # Проверка наличия main.py
-            if [ ! -f "$dir/main.py" ]; then
-              echo "Error: main.py not found in $dir" | tee -a "$log_file"
-              echo "Missing main.py in $dir" >> smoke_test_logs/errors.log
-              continue
-            fi
-
-            # Запуск SmokeTest
-            echo "Running smoke test for $dir" | tee -a "$log_file"
-            python SmokeTest/smoke_test.py "$dir/main.py" >> "$log_file" 2>&1
+            
+            python SmokeTest/smoke_test.py "$dir" > "$log_file" 2>&1
             if [ $? -ne 0 ]; then
-              echo "Smoke test failed for $dir" | tee -a "$log_file"
+              echo "Error: Smoke test failed for $dir" | tee -a "$log_file"
               echo "$dir failed smoke test" >> smoke_test_logs/errors.log
             else
               echo "$dir passed smoke test" >> smoke_test_logs/success.log
             fi
           done
-          
+
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v3
