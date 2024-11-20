@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Write the dir
+        run:
+          echo $GITHUB_WORKSPACE
+
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
