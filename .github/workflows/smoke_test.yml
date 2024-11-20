@@ -49,8 +49,11 @@ jobs:
 
             PORT=8080
 
-            # Остановка контейнеров, которые могут занимать порт
-            docker ps -aq --filter "status=exited" | xargs -r docker rm
+            # Остановка и удаление контейнеров, использующих порт
+            if docker ps -q --filter "publish=$PORT" | grep .; then
+              echo "Stopping Docker container using port $PORT..."
+              docker stop $(docker ps -q --filter "publish=$PORT") || true
+            fi
 
             # Проверка и освобождение порта
             if netstat -tuln | grep ":$PORT "; then
