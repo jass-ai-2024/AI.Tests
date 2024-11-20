@@ -31,6 +31,27 @@ jobs:
         run:
           echo $GITHUB_WORKSPACE
 
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install Docker (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo systemctl enable --now docker
+          docker --version
+
+      - name: Install Docker (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask docker
+          open /Applications/Docker.app
+          # Даем время, чтобы Docker открылся
+          sleep 20
+          docker --version
+
+
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
