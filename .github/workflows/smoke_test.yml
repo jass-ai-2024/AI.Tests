@@ -34,7 +34,13 @@ jobs:
       # Шаг 3: Перебор всех папок и выполнение SmokeTest.
       - name: Run SmokeTest on each sample
         run: |
+          # Проходим по каждой папке внутри test_samples/
           for dir in test_samples/*/; do
             echo "Running smoke test for $dir..."
-            python SmokeTest/smoke_test.py "$dir"
+            # Меняем рабочую директорию на текущую папку
+            cd "$dir"
+            # Запускаем smoke_test.py в контексте этой папки
+            python ../SmokeTest/smoke_test.py
+            # Выходим из папки, чтобы продолжить проверку следующей
+            cd -
           done
