@@ -30,31 +30,17 @@ jobs:
         run: python -m pip install --upgrade pip
         
 
-      # Шаг 4: Устанавливаем Docker.
       - name: Install Docker
-        if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl enable --now docker
+          curl -fsSL https://get.docker.com | sh
+          sudo usermod -aG docker $USER
           docker --version
 
-      # Шаг 5: Проходим по каждой папке в test_samples и запускаем SmokeTest.
-      - name: Run SmokeTest on each sample
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }} # Передаем текущий рабочий каталог.
+      # Запускаем smoke_test.py для каждой папки
+      - name: Run Smoke Tests
         run: |
-          # Перебираем все подкаталоги в test_samples
           for dir in test_samples/*/; do
-            echo "Processing folder: $dir"
-            # Переходим в папку и устанавливаем зависимости
-            if [ -f "$dir/requirements.txt" ]; then
-              echo "Installing dependencies for $dir"
-              pip install -r "$dir/requirements.txt"
-            fi
-            
-            # Запускаем smoke_test.py, указав текущий каталог через GITHUB_WORKSPACE
-            echo "Running SmokeTest for $dir"
-            python SmokeTest/smoke_test.py || exit 1
+            echo "Running smoke test for $dir..."
+            export GITHUB_WORKSPACE=$dir
+            python SmokeTest/smoke_test.py
           done
-
