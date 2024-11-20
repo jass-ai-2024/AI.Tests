@@ -42,6 +42,12 @@ jobs:
           for dir in test_samples/*/; do
             echo "Running smoke test for $dir..."
             export GITHUB_WORKSPACE=$dir
+
+            if lsof -i:8080; then
+              echo "Port 8080 is in use. Freeing it..."
+              fuser -k 8080/tcp || true
+            fi
+            
             if ! python SmokeTest/smoke_test.py; then
               echo "Smoke test failed for $dir"
             fi
