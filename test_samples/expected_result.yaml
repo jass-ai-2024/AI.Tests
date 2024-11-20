@@ -1,0 +1,59 @@
+tests:
+  - name: "different_port"
+    expected_result: false
+    reason_of_fail: "The service is listening on port 4000 instead of the required port 5000."
+
+  - name: "different_status"
+    expected_result: false
+    reason_of_fail: "The service returns a 404 status code instead of the expected 200."
+
+  - name: "empty_requirements"
+    expected_result: false
+    reason_of_fail: "The requirements is empty"
+
+  - name: "no_requirements"
+    expected_result: false
+    reason_of_fail: "We should add requirements"
+
+  - name: "test1"
+    expected_result: true
+    reason_of_fail: ""
+
+  - name: "no_main"
+    expected_result: false
+    reason_of_fail: "No main file and might be false when check unused functions"
+
+  - name: "test2-11"
+    expected_result: false
+    reason_of_fail: "No running loop, only for Yaroslav's check"
+
+# Not for Ilia:
+
+  - name: "no_main"
+    expected_result: false
+    reason_of_fail: "No main file"
+
+  - name: "test2,3,4,7,11"
+    expected_result: true
+    reason_of_fail: ""
+
+  - name: "test6"
+    expected_result: false
+    reason_of_fail: "Not finished script, no returning value"
+
+  - name: "test8"
+    expected_result: false
+    reason_of_fail: "Unused class"
+
+  - name: "test9"
+    expected_result: false
+    reason_of_fail: "Unused function"
+
+  - name: "test10"
+    expected_result: false
+    reason_of_fail: "Unused imports"
+
+
+
+
+
