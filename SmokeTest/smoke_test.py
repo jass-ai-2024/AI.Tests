@@ -83,11 +83,11 @@ def main(workspace_dir):
         return (False, "Failed to start container")
 
     # Check if the service responds correctly
-    print("Testing /version endpoint...")
-    if not check_version_endpoint():
-        print("Version endpoint test failed")
+    print("Testing /openapi.json endpoint...")
+    if not check_openapi_endpoint(workspace_dir):
+        print("Check openapi test failed")
         run_command("docker compose down", workspace_dir)
-        return (False, "Version endpoint test failed")
+        return (False, "Check openapi test failed")
 
     print("Smoke test completed successfully!")
     run_command("docker compose down", workspace_dir)
