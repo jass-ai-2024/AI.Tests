@@ -62,13 +62,33 @@ def copy_to_blackbox(project_path: str) -> None:
 
 def process_project(project_path: str) -> None:
     """Process a single project folder"""
+    # Run initial tests
     linter_passed, smoke_passed = run_tests(project_path)
 
-    if linter_passed and smoke_passed:
-        write_results_file(project_path, "TESTS_PASSED", "All tests passed successfully")
-        copy_to_blackbox(project_path)
+    if not linter_passed or not smoke_passed:
+        write_results_file(project_path, "TESTS_DONE", "")
+        return
 
-    # Mark tests as done regardless of outcome
+    # Generate automatic tests
+    try:
+        import AutomaticTestsGeneration.main as auto_tests_gen
+        auto_tests_gen.main(project_path)
+    except Exception as e:
+        write_results_file(project_path, "TESTS_FAILED", f"Failed to generate tests: {str(e)}")
+        write_results_file(project_path, "TESTS_DONE", "")
+        return
+
+    # Run automatic tests
+    import AutoTestsRunner
+    auto_tests_passed, error_msg = AutoTestsRunner.main(project_path)
+
+    if not auto_tests_passed:
+        write_results_file(project_path, "TESTS_FAILED", error_msg)
+        write_results_file(project_path, "TESTS_DONE", "")
+        return
+
+    # If all tests passed, proceed with deployment
+    copy_to_blackbox(project_path)
     write_results_file(project_path, "TESTS_DONE", "")
 
 def main() -> None:

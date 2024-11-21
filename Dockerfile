@@ -35,4 +35,6 @@ WORKDIR /app
 # Copy current directory contents to /app
 COPY . /app
 
+RUN pip3 install -r requirements.txt
+
 ENTRYPOINT python3 ./main.py
