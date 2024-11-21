@@ -1,9 +1,6 @@
-<<<<<<< Updated upstream
 requests==2.31.0
 pylint
 flake8
 mypy
 deadcode
-=======
 openai~=1.52.0
->>>>>>> Stashed changes

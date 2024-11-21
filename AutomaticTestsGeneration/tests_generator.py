@@ -5,9 +5,7 @@ import os
 
 class TestGeneration:
     def __init__(self):
-        #TODO make the key acceptable through .env
-        # self.openai_api_key = os.getenv("OPENAI_API_KEY")
-        self.openai_api_key = ""
+        self.openai_api_key = os.getenv("OPENAI_API_KEY")
 
     def chat_conversation(self, data):
         client = OpenAI(api_key=self.openai_api_key)
