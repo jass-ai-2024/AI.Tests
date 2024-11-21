@@ -2,6 +2,7 @@ import os
 import subprocess
 import tempfile
 from typing import List, Tuple
+import sys
 
 
 class RunUnusedCheckTests:
@@ -98,22 +99,17 @@ class RunUnusedCheckTests:
         return is_tests_ok, message
 
 
-if __name__ == "__main__":
-    import sys
-
-    if len(sys.argv) != 2:
-        print("Usage: python analyze_code.py <path_to_file_or_directory>")
-        sys.exit(1)
-
+def main(path):
     path = sys.argv[1]
     if not os.path.exists(path):
         print(f"Error: The path '{path}' does not exist.")
-        sys.exit(1)
+        return (False, f"Error: The path '{path}' does not exist.")
 
     tester = RunUnusedCheckTests(path)
     test_run = tester.analyze_code()
     test_results = tester.return_status()
-    if not test_results[0]:
-        with open("linter_results.txt", "w") as f:
-            f.write(test_results[1])
-        sys.exit(1)
+    return test_results
+
+
+if __name__ == "__main__":
+    main(sys.argv[1])
