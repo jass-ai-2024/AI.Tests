@@ -7,18 +7,19 @@ import time
 import requests
 import json
 
-def check_version_endpoint():
-    """
-    Check if the /version endpoint is responding correctly
-    """
+def check_openapi_endpoint(workspace_dir):
     max_retries = 30
     retry_interval = 1
 
     for _ in range(max_retries):
         try:
-            response = requests.get('http://localhost:8080/version')
+            response = requests.get('http://localhost:9000/openapi.json')
             if response.status_code == 200:
                 print(f"Version endpoint responded with: {response.text}")
+                output_file = os.path.join(workspace_dir, "openapi.json")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    json.dump(response.json(), f, ensure_ascii=False, indent=4)
+                print(f"Info saved into {output_file}")
                 return True
         except requests.exceptions.ConnectionError:
             pass
@@ -82,11 +83,11 @@ def main(workspace_dir):
         return (False, "Failed to start container")
 
     # Check if the service responds correctly
-    print("Testing /version endpoint...")
-    if not check_version_endpoint():
-        print("Version endpoint test failed")
+    print("Testing /openapi.json endpoint...")
+    if not check_openapi_endpoint(workspace_dir):
+        print("Check openapi test failed")
         run_command("docker compose down", workspace_dir)
-        return (False, "Version endpoint test failed")
+        return (False, "Check openapi test failed")
 
     print("Smoke test completed successfully!")
     run_command("docker compose down", workspace_dir)
