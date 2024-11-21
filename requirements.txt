@@ -3,3 +3,4 @@ pylint
 flake8
 mypy
 deadcode
+openai~=1.52.0
