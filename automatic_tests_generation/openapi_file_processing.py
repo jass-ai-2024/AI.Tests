@@ -3,8 +3,8 @@ from tests_generator import TestGeneration
 
 
 class FileProcessing:
-    def __init__(self, repo_url):
-        self.repo_url = repo_url
+    def __init__(self, directory_link):
+        self.repo_url = directory_link
         self.__generated_tests = list()
 
     def tests_generation(self):
