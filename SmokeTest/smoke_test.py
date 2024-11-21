@@ -7,18 +7,19 @@ import time
 import requests
 import json
 
-def check_version_endpoint():
-    """
-    Check if the /version endpoint is responding correctly
-    """
+def check_openapi_endpoint(workspace_dir):
     max_retries = 30
     retry_interval = 1
 
     for _ in range(max_retries):
         try:
-            response = requests.get('http://localhost:8080/version')
+            response = requests.get('http://localhost:9000/openapi.json')
             if response.status_code == 200:
                 print(f"Version endpoint responded with: {response.text}")
+                output_file = os.path.join(workspace_dir, "openapi.json")
+                with open(output_file, "w", encoding="utf-8") as f:
+                    json.dump(response.json(), f, ensure_ascii=False, indent=4)
+                print(f"Info saved into {output_file}")
                 return True
         except requests.exceptions.ConnectionError:
             pass
