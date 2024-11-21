@@ -1,31 +1,41 @@
 ### Overview
-Brief description of the project, its purpose, and main goals.
+Our team, consisting of four members — Kirill Krinkin, Iaroslav Chelombitko, Ilia Nechaev, and Kamaliia Alisheva — forms the AI Tests team. Our primary goal is to ensure that the generated code meets the necessary standards for usability and approval.
 
 ###  Problem Statement (technology perspective)
-Clear explanation of the problem this project aims to solve.
+The problem we are to solve is to develop a system that will take as an input the directory with the code and tests it.
 
 ### Objectives
-- Objective 1
-- Objective 2
-- Objective 3
+- Test the code in case of any unused entities in it
+- Test the typing of the code
+- Smoke test
+- Functional tests based on project description
+- Deployment
+- Approval
 
 ### Features
-- Feature 1: Brief description
-- Feature 2: Brief description
-- Feature 3: Brief description
+- Unused Code Checks: We employ various established methods to verify whether the code contains unused elements and ensure adequate typing. For the code to progress, it must pass all tests without any failures or "errors." These tests are conducted using a combination of tools.
+- Smoke test: we check that the code can be run without any errors and it runs on specific port.
+- Deploy: after all test passed we deploy the code to the server.
+- All checks and deployment are done via CI/CD pipeline on GitHub Actions.
 
 ### Timeline
 - 18.11: Deliverables:
-	- tbd
+	- Task understanding
+	- Base unused code checks
+  	- Synthetic code (tests) generation
 - 19.11: Deliverables:
-	- tbd
+	- Unused code checks
+	- Smoke test
+	- Deploy
 - 20.11: Deliverables:
-	- tbd
+	- Functionl tests
 - 21.11: Deliverables:
 	- tbd
 ### Team
-- one
-- two
+- Kirill Krinkin
+- Ilia Nechaev
+- Iaroslav Chelombitko
+- Kamaliia Alisheva
 
 ### Risks and Mitigation Strategies
 
@@ -33,13 +43,17 @@ At least two!
 
 | Risk   | Impact          | Probability     | Mitigation Strategy  |
 | ------ | --------------- | --------------- | -------------------- |
-| Risk 1 | High/Medium/Low | High/Medium/Low | Strategy description |
-| Risk 2 | High/Medium/Low | High/Medium/Low | Strategy description |
+| Insufficient user-case coverage | **High**/Medium/Low | High/**Medium**/Low | We will not only rely on the synthetic tests, but actuallywork with other teams to get the "real-code" to test; more strict tests overall |
+| Github-actions limits | High/**Medium**/Low | High/**Medium**/Low | Set up all the actions that way to mitigate it. Actions run separation |
 ### Success Criteria
-- Criterion 1
-- Criterion 2
-- Criterion 3
+- Automatic GitHub Action run when the code is commited.
+- Correctly returned exit codes for each keys
+- End-to-end correct feedback sending
 
 ### Appendix
-Any additional information, references, or documents relevant to the project.
 
+**How to run**
+```
+docker build -t ai-tests .
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v <PROJECT_DIR>:/project ai-tests
+```
