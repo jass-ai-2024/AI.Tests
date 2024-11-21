@@ -2,9 +2,8 @@ from AutomaticTestsGeneration.openapi_file_processing import FileProcessing
 import os
 
 
-def save_tests_to_files(tests, directory="__autotests"):
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    target_directory = os.path.join(script_directory, directory)
+def save_tests_to_files(tests, directory):
+    target_directory = directory
     os.makedirs(target_directory, exist_ok=True)
 
     for i, test_code in enumerate(tests):
@@ -21,5 +20,5 @@ def main(dir):
     file_processor_and_test_generator = FileProcessing(dir)
     file_processor_and_test_generator.tests_generation()
     tests = file_processor_and_test_generator.get_generated_tests()
-    save_tests_to_files(tests)
+    save_tests_to_files(tests, dir + "/__autotests")
     return tests
