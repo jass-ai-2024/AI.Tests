@@ -52,6 +52,8 @@ At least two!
 
 ### Appendix
 
+Before building image don't forget to create `.env` file and put there your `OPENAI_API_KEY`
+
 **How to run**
 ```
 docker build -t ai-tests .

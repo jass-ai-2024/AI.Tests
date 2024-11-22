@@ -2,6 +2,21 @@ import os
 import subprocess
 import time
 from typing import Tuple
+import requests
+
+def wait_for_service():
+    max_retries = 30
+    retry_interval = 10
+
+    for _ in range(max_retries):
+        try:
+            response = requests.get('http://localhost:9000/openapi.json')
+            if response.status_code == 200:
+                return
+        except requests.exceptions.ConnectionError:
+            pass
+        time.sleep(retry_interval)
+        print("Waiting for service to be ready...")
 
 def run_tests(project_path: str) -> Tuple[bool, str]:
     """Run all tests in the project using pytest"""
@@ -14,17 +29,15 @@ def run_tests(project_path: str) -> Tuple[bool, str]:
     try:
         # Start docker compose
         print("Starting docker compose...")
-        subprocess.run(
-            ["docker", "compose", "up", "-d"],
+        process = subprocess.Popen(
+            ["docker compose up"],
             cwd=project_path,
-            check=True,
-            capture_output=True,
-            text=True
+            shell=True,
         )
 
         # Wait for service to be ready
         print("Waiting for service to be ready...")
-        time.sleep(5)
+        wait_for_service()
 
         print("Running tests...")
         # Run all test files using pytest
@@ -54,11 +67,9 @@ def run_tests(project_path: str) -> Tuple[bool, str]:
         print("Stopping docker compose...")
         try:
             subprocess.run(
-                ["docker", "compose", "down"],
+                ["docker compose down"],
                 cwd=project_path,
-                check=True,
-                capture_output=True,
-                text=True
+                shell=True,
             )
         except Exception as e:
             print(f"Error stopping docker compose: {e}")

@@ -33,8 +33,12 @@ ENV PROJECT_DIR=/project
 WORKDIR /app
 
 # Copy current directory contents to /app
-COPY . /app
+COPY ./requirements.txt /app/requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT python3 ./main.py
+COPY . /app
+
+SHELL ["/bin/bash", "-c"]
+
+ENTRYPOINT source .env && python3 ./main.py /project/development

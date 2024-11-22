@@ -9,7 +9,7 @@ import json
 
 def check_openapi_endpoint(workspace_dir):
     max_retries = 30
-    retry_interval = 1
+    retry_interval = 10
 
     for _ in range(max_retries):
         try:
@@ -34,12 +34,18 @@ def run_command(command, workdir):
     Run a shell command and return the result
     """
     try:
-        result = subprocess.run(
+        if command == "docker compose down":
+            result = subprocess.run(
+                command,
+                shell=True,
+                cwd=workdir,
+            )
+            return True
+
+        result = subprocess.Popen(
             command,
             shell=True,
-            check=True,
-            text=True,
-            capture_output=True,
+            # capture_output=True,
             cwd=workdir,
         )
         return True

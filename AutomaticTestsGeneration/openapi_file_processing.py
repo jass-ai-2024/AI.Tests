@@ -1,5 +1,5 @@
-from openapi_file_finder import ArtefactTestsFinder
-from tests_generator import TestGeneration
+from AutomaticTestsGeneration.openapi_file_finder import ArtefactTestsFinder
+from AutomaticTestsGeneration.tests_generator import TestGeneration
 
 
 class FileProcessing:
