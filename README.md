@@ -24,7 +24,7 @@ The problem we are to solve is to develop a system that will take as an input th
 	- Base unused code checks
   	- Synthetic code (tests) generation
 - 19.11: Deliverables:
-	- Unused code checks 
+	- Unused code checks
 	- Smoke test
 	- Deploy
 - 20.11: Deliverables:
@@ -51,4 +51,11 @@ At least two!
 - End-to-end correct feedback sending
 
 ### Appendix
-Any additional information, references, or documents relevant to the project.
+
+Before building image don't forget to create `.env` file and put there your `OPENAI_API_KEY`
+
+**How to run**
+```
+docker build -t ai-tests .
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v <PROJECT_DIR>:/project ai-tests
+```
